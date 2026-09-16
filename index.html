@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hello, World (and Especially You)</title>
+<style>
+  :root {
+    --bg-1: #1a1030;
+    --bg-2: #3b1050;
+    --bg-3: #7b2d6b;
+    --gold: #f5c96b;
+    --pink: #ff9ecb;
+    --cream: #fff6ea;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, var(--bg-1), var(--bg-2) 45%, var(--bg-3));
+    background-size: 300% 300%;
+    animation: drift 18s ease infinite;
+    font-family: 'Georgia', 'Iowan Old Style', serif;
+    color: var(--cream);
+  }
+
+  @keyframes drift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .sky {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--cream);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.6); }
+  }
+
+  .heart {
+    position: absolute;
+    bottom: -10%;
+    font-size: 1.4rem;
+    color: var(--pink);
+    opacity: 0.85;
+    animation: float-up linear infinite;
+    filter: drop-shadow(0 0 6px rgba(255, 158, 203, 0.6));
+  }
+
+  @keyframes float-up {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.9; }
+    90%  { opacity: 0.7; }
+    100% { transform: translateY(-115vh) translateX(var(--drift, 40px)) rotate(360deg); opacity: 0; }
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6vh 6vw;
+  }
+
+  .eyebrow {
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: var(--gold);
+    opacity: 0;
+    animation: reveal 1s ease forwards;
+    animation-delay: 0.2s;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 7vw, 5.5rem);
+    margin: 0.3em 0 0.15em;
+    background: linear-gradient(90deg, var(--gold), var(--pink), var(--gold));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 6s linear infinite, reveal 1.2s ease forwards;
+    opacity: 0;
+    animation-delay: 0s, 0.4s;
+    text-shadow: 0 0 40px rgba(245, 201, 107, 0.25);
+  }
+
+  @keyframes shine {
+    to { background-position: 200% center; }
+  }
+
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 2.4vw, 1.35rem);
+    max-width: 42em;
+    line-height: 1.75;
+    color: var(--cream);
+    opacity: 0;
+    animation: reveal 1.2s ease forwards;
+    animation-delay: 0.9s;
+  }
+
+  .subtitle strong {
+    color: var(--gold);
+    font-weight: normal;
+    font-style: italic;
+  }
+
+  .signature {
+    margin-top: 2.5em;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    animation: reveal 1.2s ease forwards;
+    animation-delay: 1.6s;
+    color: var(--pink);
+  }
+
+  .rule {
+    width: 60px;
+    height: 2px;
+    margin: 1.6em auto;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    animation: reveal 1.2s ease forwards;
+    animation-delay: 1.3s;
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2em 1em 3em;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: rgba(255, 246, 234, 0.45);
+  }
+
+  footer a {
+    color: rgba(255, 246, 234, 0.6);
+  }
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky"></div>
+
+<main>
+  <div class="eyebrow">A very important announcement</div>
+  <h1>Hello, World.<br>Hello, Love.</h1>
+  <div class="rule"></div>
+  <p class="subtitle">
+    Somewhere in the vast, noisy sprawl of the internet, most pages just say
+    <strong>"Hello, World"</strong> and call it a day. This one has better taste.
+    It exists for one reason: to tell <strong>Meg</strong> that she is,
+    without a doubt, the best thing that has ever happened to this particular
+    human — and that every line of code on this little corner of the web was
+    written with a very large, very unashamed smile.
+  </p>
+  <div class="signature">— with all my love, Bob</div>
+</main>
+
+<footer>
+  boblaz.com &middot; built with more love than HTML
+</footer>
+
+<script>
+  // Twinkling stars
+  const sky = document.getElementById('sky');
+  const STAR_COUNT = 60;
+  for (let i = 0; i < STAR_COUNT; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.top = Math.random() * 100 + 'vh';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    s.style.animationDuration = (2 + Math.random() * 3) + 's';
+    sky.appendChild(s);
+  }
+
+  // Floating hearts
+  const HEART_COUNT = 16;
+  const hearts = ['❤', '💛', '💕'];
+  for (let i = 0; i < HEART_COUNT; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.setProperty('--drift', (Math.random() * 160 - 80) + 'px');
+    h.style.animationDuration = (8 + Math.random() * 10) + 's';
+    h.style.animationDelay = (Math.random() * 12) + 's';
+    h.style.fontSize = (1 + Math.random() * 1.2) + 'rem';
+    sky.appendChild(h);
+  }
+</script>
+
+</body>
+</html>
