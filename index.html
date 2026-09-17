@@ -3,226 +3,391 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hello, World (and Especially You)</title>
+<title>boblaz.com</title>
+<meta name="description" content="nothing to see here">
 <style>
   :root {
-    --bg-1: #1a1030;
-    --bg-2: #3b1050;
-    --bg-3: #7b2d6b;
-    --gold: #f5c96b;
-    --pink: #ff9ecb;
-    --cream: #fff6ea;
+    --bg: #0a0e0a;
+    --fg: #3bf777;
+    --fg-dim: #1f8a45;
+    --fg-bright: #baffce;
+    --amber: #ffb545;
   }
 
   * { box-sizing: border-box; }
 
   html, body {
     margin: 0;
-    padding: 0;
     height: 100%;
-    overflow-x: hidden;
-    background: linear-gradient(135deg, var(--bg-1), var(--bg-2) 45%, var(--bg-3));
-    background-size: 300% 300%;
-    animation: drift 18s ease infinite;
-    font-family: 'Georgia', 'Iowan Old Style', serif;
-    color: var(--cream);
-  }
-
-  @keyframes drift {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  .sky {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+    font-size: 15px;
     overflow: hidden;
   }
 
-  .star {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: var(--cream);
-    border-radius: 50%;
-    opacity: 0.6;
-    animation: twinkle 3s ease-in-out infinite;
+  /* CRT scanline + vignette overlay */
+  .crt {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 1px,
+        rgba(0, 0, 0, 0.18) 2px,
+        rgba(0, 0, 0, 0.18) 3px
+      );
+    mix-blend-mode: multiply;
   }
 
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.15; transform: scale(1); }
-    50% { opacity: 0.9; transform: scale(1.6); }
+  .vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 6;
+    box-shadow: inset 0 0 18vw rgba(0, 0, 0, 0.75);
   }
 
-  .heart {
-    position: absolute;
-    bottom: -10%;
-    font-size: 1.4rem;
-    color: var(--pink);
-    opacity: 0.85;
-    animation: float-up linear infinite;
-    filter: drop-shadow(0 0 6px rgba(255, 158, 203, 0.6));
+  .flicker {
+    animation: flicker 6s infinite;
   }
 
-  @keyframes float-up {
-    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-    10%  { opacity: 0.9; }
-    90%  { opacity: 0.7; }
-    100% { transform: translateY(-115vh) translateX(var(--drift, 40px)) rotate(360deg); opacity: 0; }
+  @keyframes flicker {
+    0%, 96%, 100% { opacity: 1; }
+    97% { opacity: 0.94; }
+    98% { opacity: 1; }
+    99% { opacity: 0.9; }
   }
 
-  main {
+  #screen {
     position: relative;
     z-index: 1;
-    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
+    padding: 3vh 4vw;
+    overflow-y: auto;
+    text-shadow: 0 0 6px rgba(59, 247, 119, 0.5), 0 0 1px rgba(59, 247, 119, 0.8);
+    cursor: text;
+  }
+
+  #screen::-webkit-scrollbar { width: 0; }
+
+  #log {
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+  }
+
+  .dim { color: var(--fg-dim); }
+  .bright { color: var(--fg-bright); }
+  .amber { color: var(--amber); }
+  .prompt-label { color: var(--fg-bright); }
+
+  #inputLine {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 6vh 6vw;
+    align-items: baseline;
+    line-height: 1.5;
   }
 
-  .eyebrow {
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    color: var(--gold);
-    opacity: 0;
-    animation: reveal 1s ease forwards;
-    animation-delay: 0.2s;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+  #inputLine .prompt-label {
+    flex-shrink: 0;
+    margin-right: 0.5ch;
   }
 
-  h1 {
-    font-size: clamp(2.4rem, 7vw, 5.5rem);
-    margin: 0.3em 0 0.15em;
-    background: linear-gradient(90deg, var(--gold), var(--pink), var(--gold));
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shine 6s linear infinite, reveal 1.2s ease forwards;
-    opacity: 0;
-    animation-delay: 0s, 0.4s;
-    text-shadow: 0 0 40px rgba(245, 201, 107, 0.25);
-  }
-
-  @keyframes shine {
-    to { background-position: 200% center; }
-  }
-
-  @keyframes reveal {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .subtitle {
-    font-size: clamp(1rem, 2.4vw, 1.35rem);
-    max-width: 42em;
-    line-height: 1.75;
-    color: var(--cream);
-    opacity: 0;
-    animation: reveal 1.2s ease forwards;
-    animation-delay: 0.9s;
-  }
-
-  .subtitle strong {
-    color: var(--gold);
-    font-weight: normal;
-    font-style: italic;
-  }
-
-  .signature {
-    margin-top: 2.5em;
-    font-size: 1.1rem;
-    letter-spacing: 0.08em;
-    opacity: 0;
-    animation: reveal 1.2s ease forwards;
-    animation-delay: 1.6s;
-    color: var(--pink);
-  }
-
-  .rule {
-    width: 60px;
-    height: 2px;
-    margin: 1.6em auto;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    opacity: 0;
-    animation: reveal 1.2s ease forwards;
-    animation-delay: 1.3s;
-  }
-
-  footer {
+  #inputWrap {
+    flex: 1;
     position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 2em 1em 3em;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    color: rgba(255, 246, 234, 0.45);
   }
 
-  footer a {
-    color: rgba(255, 246, 234, 0.6);
+  #typed {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  #cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    background: var(--fg-bright);
+    vertical-align: text-bottom;
+    margin-left: 1px;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+
+  #hiddenInput {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    left: -9999px;
+  }
+
+  a { color: var(--amber); }
+
+  /* Matrix rain easter egg */
+  #matrix {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    display: none;
   }
 </style>
 </head>
 <body>
 
-<div class="sky" id="sky"></div>
+<canvas id="matrix"></canvas>
+<div class="crt flicker"></div>
+<div class="vignette"></div>
 
-<main>
-  <div class="eyebrow">A very important announcement</div>
-  <h1>Hello, World.<br>Hello, Love.</h1>
-  <div class="rule"></div>
-  <p class="subtitle">
-    Somewhere in the vast, noisy sprawl of the internet, most pages just say
-    <strong>"Hello, World"</strong> and call it a day. This one has better taste.
-    It exists for one reason: to tell <strong>Meg</strong> that she is,
-    without a doubt, the best thing that has ever happened to this particular
-    human — and that every line of code on this little corner of the web was
-    written with a very large, very unashamed smile.
-  </p>
-  <div class="signature">— with all my love, Bob</div>
-</main>
+<div id="screen">
+  <div id="log"></div>
+  <div id="inputLine" style="display:none;">
+    <span class="prompt-label">guest@boblaz</span><span class="dim">:~$</span>&nbsp;<div id="inputWrap"><span id="typed"></span><span id="cursor"></span></div>
+  </div>
+</div>
 
-<footer>
-  boblaz.com &middot; built with more love than HTML
-</footer>
+<input id="hiddenInput" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false">
 
 <script>
-  // Twinkling stars
-  const sky = document.getElementById('sky');
-  const STAR_COUNT = 60;
-  for (let i = 0; i < STAR_COUNT; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    s.style.left = Math.random() * 100 + 'vw';
-    s.style.top = Math.random() * 100 + 'vh';
-    s.style.animationDelay = (Math.random() * 3) + 's';
-    s.style.animationDuration = (2 + Math.random() * 3) + 's';
-    sky.appendChild(s);
+(() => {
+  const log = document.getElementById('log');
+  const screen = document.getElementById('screen');
+  const inputLine = document.getElementById('inputLine');
+  const typedEl = document.getElementById('typed');
+  const hiddenInput = document.getElementById('hiddenInput');
+
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  function append(html) {
+    const line = document.createElement('div');
+    line.innerHTML = html;
+    log.appendChild(line);
+    screen.scrollTop = screen.scrollHeight;
   }
 
-  // Floating hearts
-  const HEART_COUNT = 16;
-  const hearts = ['❤', '💛', '💕'];
-  for (let i = 0; i < HEART_COUNT; i++) {
-    const h = document.createElement('div');
-    h.className = 'heart';
-    h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-    h.style.left = Math.random() * 100 + 'vw';
-    h.style.setProperty('--drift', (Math.random() * 160 - 80) + 'px');
-    h.style.animationDuration = (8 + Math.random() * 10) + 's';
-    h.style.animationDelay = (Math.random() * 12) + 's';
-    h.style.fontSize = (1 + Math.random() * 1.2) + 'rem';
-    sky.appendChild(h);
+  async function typeLine(text, opts = {}) {
+    const { speed = 12, cls = '' } = opts;
+    const line = document.createElement('div');
+    if (cls) line.className = cls;
+    log.appendChild(line);
+    for (let i = 0; i < text.length; i++) {
+      line.textContent += text[i];
+      screen.scrollTop = screen.scrollHeight;
+      await sleep(speed);
+    }
   }
+
+  const boot = [
+    { t: 'boblaz.com boot sequence — v1.0', cls: 'dim', speed: 8 },
+    { t: '', speed: 0 },
+    { t: '[  OK  ] Mounting /dev/personal-domain', speed: 4 },
+    { t: '[  OK  ] Starting mail relay (that is why you are here)', speed: 4 },
+    { t: '[  OK  ] Checking for interesting content ....... none found', speed: 4 },
+    { t: '[  OK  ] Loading personality module', speed: 4 },
+    { t: '[ WARN ] Personality module is mostly puns', speed: 4 },
+    { t: '[  OK  ] Starting shell', speed: 4 },
+    { t: '', speed: 0 },
+  ];
+
+  const files = {
+    'readme.txt': 'You looked up a domain from an email address.\nThat is either healthy skepticism or excellent curiosity. Either way, welcome.',
+    'secrets.txt': 'error: permission denied\n(there is nothing here, but "denied" sounded cooler than "empty")',
+    '.plan': 'get coffee -> write code -> repeat',
+  };
+
+  const commands = {
+    help() {
+      return [
+        'available commands:',
+        '  help          show this list',
+        '  whoami        find out who you are',
+        '  about         what this site is for',
+        '  contact       how to reach a human',
+        '  ls            list files',
+        '  cat <file>    read a file',
+        '  sudo <cmd>    try your luck',
+        '  matrix        you know the one',
+        '  date          current date/time',
+        '  clear         clear the screen',
+      ].join('\n');
+    },
+    whoami() {
+      const guesses = [
+        'a curious human who typed an email domain into a browser',
+        'someone double-checking this isn\'t a phishing domain (good instinct)',
+        'probably not a robot. probably.',
+      ];
+      return guesses[Math.floor(Math.random() * guesses.length)];
+    },
+    about() {
+      return 'This domain mostly exists to receive email.\nThe website is a bonus feature nobody asked for.';
+    },
+    contact() {
+      return 'Reply to whatever email brought you here — those get read.\nThis page intentionally doesn\'t republish the address.';
+    },
+    ls() {
+      return Object.keys(files).map(f => '-rw-r--r--  1 bob  staff  ' + (files[f].length) + '  ' + f).join('\n');
+    },
+    cat(arg) {
+      if (!arg) return 'usage: cat <file>';
+      const name = arg.trim();
+      if (files[name]) return files[name];
+      return `cat: ${name}: No such file or directory`;
+    },
+    sudo(arg) {
+      if (!arg) return 'usage: sudo <command>';
+      return `Permission denied: guest is not in the sudoers file.\nThis incident will be reported. (It will not.)`;
+    },
+    date() {
+      return new Date().toString();
+    },
+    matrix() {
+      toggleMatrix();
+      return 'wake up...';
+    },
+    clear() {
+      log.innerHTML = '';
+      return null;
+    },
+  };
+
+  const aliases = { exit: () => 'this isn\'t that kind of terminal.', quit: () => commands.exit && commands.exit() };
+
+  async function runCommand(raw) {
+    const trimmed = raw.trim();
+    if (!trimmed) return;
+    append(`<span class="prompt-label">guest@boblaz</span><span class="dim">:~$</span> ${escapeHtml(trimmed)}`);
+
+    const [cmd, ...rest] = trimmed.split(/\s+/);
+    const arg = rest.join(' ');
+    const lower = cmd.toLowerCase();
+
+    let output;
+    if (commands[lower]) {
+      output = commands[lower](arg);
+    } else if (aliases[lower]) {
+      output = aliases[lower](arg);
+    } else {
+      output = `command not found: ${cmd}\ntype 'help' for a list of commands`;
+    }
+
+    if (output) append(escapeHtml(output).replace(/\n/g, '<br>'));
+  }
+
+  function escapeHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  // Input handling — keep a real (offscreen) input focused for mobile keyboards.
+  let buffer = '';
+  const history = [];
+  let historyIdx = -1;
+
+  function renderTyped() {
+    typedEl.textContent = buffer;
+  }
+
+  hiddenInput.addEventListener('input', () => {
+    buffer = hiddenInput.value;
+    renderTyped();
+  });
+
+  hiddenInput.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const cmd = buffer;
+      if (cmd.trim()) { history.push(cmd); }
+      historyIdx = history.length;
+      buffer = '';
+      hiddenInput.value = '';
+      renderTyped();
+      await runCommand(cmd);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (historyIdx > 0) { historyIdx--; buffer = history[historyIdx] || ''; hiddenInput.value = buffer; renderTyped(); }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIdx < history.length) { historyIdx++; buffer = history[historyIdx] || ''; hiddenInput.value = buffer; renderTyped(); }
+    }
+  });
+
+  screen.addEventListener('click', () => hiddenInput.focus());
+
+  // Matrix rain easter egg
+  let matrixOn = false;
+  let matrixRAF = null;
+  function toggleMatrix() {
+    const canvas = document.getElementById('matrix');
+    matrixOn = !matrixOn;
+    if (!matrixOn) {
+      canvas.style.display = 'none';
+      if (matrixRAF) cancelAnimationFrame(matrixRAF);
+      return;
+    }
+    canvas.style.display = 'block';
+    const ctx = canvas.getContext('2d');
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+    resize();
+    const cols = Math.floor(canvas.width / 16);
+    const drops = new Array(cols).fill(0);
+    const chars = 'アイウエオカキクケコサシスセソ01';
+    let frame = 0;
+    function draw() {
+      ctx.fillStyle = 'rgba(10, 14, 10, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#3bf777';
+      ctx.font = '14px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * 16, drops[i] * 16);
+        if (drops[i] * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+      frame++;
+      if (matrixOn && frame < 260) {
+        matrixRAF = requestAnimationFrame(draw);
+      } else if (matrixOn) {
+        matrixOn = false;
+        canvas.style.display = 'none';
+      }
+    }
+    draw();
+  }
+
+  // Boot sequence
+  (async () => {
+    for (const line of boot) {
+      if (line.speed === 0) {
+        append('&nbsp;');
+      } else {
+        await typeLine(line.t, { speed: line.speed, cls: line.cls || '' });
+      }
+      await sleep(40);
+    }
+    await typeLine("Type 'help' to get started.", { speed: 10, cls: 'bright' });
+    append('&nbsp;');
+    inputLine.style.display = 'flex';
+    hiddenInput.focus();
+    renderTyped();
+  })();
+
+  window.addEventListener('resize', () => {
+    const canvas = document.getElementById('matrix');
+    if (canvas.style.display === 'block') {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+  });
+})();
 </script>
 
 </body>
