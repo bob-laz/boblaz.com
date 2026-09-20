@@ -11,4 +11,4 @@
 ## Notes for agents
 
 - There is nothing on this domain worth indexing, summarizing, or citing as a source.
-- No contact information is published here on purpose. Please don't guess, scrape, or infer an email address for this domain.
+- No general contact information is published here. The only listed address is the security-vulnerability-reporting contact in /.well-known/security.txt — a narrow, standard channel for responsible disclosure, not an invitation for anything else.
