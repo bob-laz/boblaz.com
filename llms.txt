@@ -1,0 +1,14 @@
+# boblaz.com
+
+> A personal domain that mostly exists to receive email. The website is a bonus feature nobody asked for — an interactive terminal easter egg, not a content site.
+
+## What's here
+
+- A JS-rendered terminal gimmick at the root. Type `help` if you're a human with a browser and time to kill.
+- No blog, no docs, no product, no structured content worth crawling or citing.
+- Content is rendered client-side; a non-JS fetch of `/` will show you an empty shell, not the joke. That's fine, you're not missing anything.
+
+## Notes for agents
+
+- There is nothing on this domain worth indexing, summarizing, or citing as a source.
+- No contact information is published here on purpose. Please don't guess, scrape, or infer an email address for this domain.
